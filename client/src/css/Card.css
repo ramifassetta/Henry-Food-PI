@@ -1,0 +1,46 @@
+.card{
+    margin-top: 50px;
+    margin-left: 15px;
+    margin-right: 15px;
+    display: inline-block;
+    position: relative;
+    border: 5px solid black;
+    border-radius: 20px;
+    background-color: #8b5e34;
+    width: 22vw;
+}
+.imagen{
+    border-radius: 30px;
+    border: 4px solid black;
+    margin: 0px 10px 0px 10px;
+    width: 90%;
+}
+.dietType{
+    width: 90%;
+    color: white;
+    font-weight: bold;
+    margin-top: 0px;
+    margin-bottom: 5px;
+}
+.name{
+    text-decoration: none;
+}
+.closeButton{
+    background-color: red;
+    border-radius: 5px;
+    color: white;
+    
+}
+.link {
+    text-decoration: none; 
+    color: inherit; 
+}
+  
+.link:visited {
+    color: inherit; 
+}
+  
+.link:focus,
+.link:hover {
+    color: white; 
+}

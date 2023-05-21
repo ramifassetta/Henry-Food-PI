@@ -1,0 +1,21 @@
+.barra{
+    width: 0px;
+    height: 10px;
+    margin-top: 60px;
+    margin: auto;
+}
+.barra {
+    display: flex;
+    align-items: center;
+}
+  
+.barra input[type="search"],
+.barra button {
+    margin-right: 10px;
+}
+
+.search{
+    background-color: #c6ac8f;
+    border-radius: 10px;
+    border: solid black;
+}

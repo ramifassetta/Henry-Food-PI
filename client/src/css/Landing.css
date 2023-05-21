@@ -1,0 +1,40 @@
+.titulo{
+    font-size: 3rem;
+    color: black;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: normal;
+    text-align: center;
+}
+.boton{
+    color: black;
+    background-color: yellow;
+    border-radius: 5px;
+    border-width: 0px;
+    padding: 10px 150px 10px 150px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.boton:hover {
+    background-color: #ffc300;
+    cursor: pointer;
+    font-weight: bolder;
+    text-decoration: none;
+}
+.nav{
+    text-decoration: none;
+    color: black;
+}
+h1 .negrita {
+    font-weight: bolder;
+}
+.landing-container{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-image: url("./fondoLandingPI.jpg")
+}
+.centro{
+    margin-top: 300px;
+}

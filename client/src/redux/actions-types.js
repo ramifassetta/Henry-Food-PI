@@ -1,0 +1,3 @@
+export const FILTER = "FILTER";
+export const ALPHABETICAL_ORDER = "ALPHABETICAL_ORDER";
+export const SCORE_ORDER = "SCORE_ORDER";
