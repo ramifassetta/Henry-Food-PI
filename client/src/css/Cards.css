@@ -3,11 +3,11 @@ h1{
     margin-bottom: 5px;
 }
 .pos {
-    margin-top: 100px;
+    /* margin-top: 100px; */
     display: flex;
     justify-content: space-between;
-    /* max-height: 500px; 
-    overflow: auto; */
+    max-height: 500px; 
+    overflow-y: auto;
 }
 .centro{
     width: 20vw;
@@ -39,14 +39,12 @@ h1{
 }
 .scroll{
     max-height: 1000px;
-    overflow: auto;
+    margin-bottom: 30px;
 }
 .select {
     display: flex;
     flex-direction: row;
-    justify-content: center;
     align-items: center;
-    margin-top: 10px;
 }
 .filters {
     display: flex;
@@ -55,4 +53,10 @@ h1{
     font-weight: 500;
     text-shadow: 6px 4px 5px rgba(0,0,0,0.43);
     padding: 10px 3px 0px;
+}
+.ordersYfilters{
+    margin-left: 100px;
+    align-items: center;
+    margin-top: 80px;
+    width: fit-content;
 }

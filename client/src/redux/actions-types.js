@@ -1,3 +1,9 @@
 export const FILTER = "FILTER";
 export const ALPHABETICAL_ORDER = "ALPHABETICAL_ORDER";
 export const SCORE_ORDER = "SCORE_ORDER";
+export const ADD_RECIPES = "ADD_RECIPES";
+export const SET_RECIPES = "SET_RECIPES";
+export const CLOSE_RECIPE = "CLOSE_RECIPE";
+export const FILTER_SOURCE = "FILTER_SOURCE";
+export const REFRESH_RECIPES = "REFRESH_RECIPES";
+

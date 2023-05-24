@@ -1,26 +1,24 @@
 import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux";
+import { validation } from "../validation";
+import { addRecipes } from '../redux/actions';
 import axios from "axios";
 import "../css/Forms.css";
+import { useNavigate } from "react-router-dom";
 
-const validate = (input) => {
-  const errors = {}
-  if(!input.image) errors.image = "Please insert a image URL"
-  if(!input.name) errors.name = "Please complete with a recipe name";
-  if(!input.summary) errors.summary = "Please add some comments about your recipe";
-  if(input.healthScore < 1 || input.score > 100) errors.healthScore = "The score must be a number between 1 and 100";
-  if(!input.steps.length) errors.steps = "Please detail the steps for your recipe";
-  if(!input.dietTypes.length) errors.dietTypes = "You must select at least one diet type";
-}
+const URL = `http://localhost:3001/recipes`;
+const URL_DIETS = `http://localhost:3001/diets`;
 
 export const Form = () => {
-
-  const URL = `http://localhost:3001/recipes`;
-  const URL_DIETS = `http://localhost:3001/diets`;
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const [diets, setDiets] = useState([]);
-  const [selectedDiets, setSelectedDiets] = useState([]); //checkear esto, sino borrar
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState({});
 
+  const existingRecipes = useSelector(state => state.allRecipes);
+
+  //useEffect para traer las dietas cuando se monta el componente
   useEffect(() => {
     const fetchDiets = async () => {
       try {
@@ -34,115 +32,111 @@ export const Form = () => {
     fetchDiets();
   }, []);
 
-  
   const [recipeData, setRecipeData] = useState({
     image: "",
     name: "",
     summary: "",
     healthScore: "",
     steps: "",
-    dietTypes: ""
+    dietTypes: []
   });
-  
+
   const handleChange = (event) => {
-    event.preventDefault();
-    setRecipeData((prevData) => {
-      const newData = {
-        ...prevData,
-        [event.target.value]: event.target.value
-      }
-      const validations = validate(newData);
-      setErrors(validations)
-      return newData;
-    })
-  }
+    const { name, value, checked } = event.target;
+    let updatedValue = value;
   
-  const handleSubmit = async(event) => {
-    // try {
-    //   event.preventDefault();
-    //   const response = await axios.post(URL, recipeData);
-    //   console.log(response.data); 
-    // } catch (error) {
-    //   console.error(error); 
-    // }
-    event.preventDefault();
-
-    if(Object.values(errors).length > 0) {
-      alert ("Please complete the information required");
-    }
-    else if (
-      recipeData.image === "" &&
-      recipeData.name === "" &&
-      recipeData.summary === "" &&
-      recipeData.healthScore === "" &&
-      recipeData.steps === "" &&
-      !recipeData.dietTypes.length){
-        alert("Please complete the Form");
-      }
-    else {
-      const response = await axios.post(URL, recipeData);
-      alert ("New Recipe added successfully!")
-      setRecipeData({
-        image: "",
-        name: "",
-        summary: "",
-        healthScore: "",
-        steps: [],
-        dietTypes: []
-      })
-    }
-  }
-
-  //
-    const handleDietChange = (event) => {
-      const { value, checked } = event.target;
+    if (name === "dietTypes") {
+      const diet = value;
   
-      if (checked) {                                    //checkear esto, sino borrar
-        setSelectedDiets([...selectedDiets, value]);
+      if (checked) {
+        // Agregar la dieta seleccionada al array de dietTypes en recipeData
+        updatedValue = [...recipeData.dietTypes, diet];
       } else {
-        setSelectedDiets(selectedDiets.filter(diet => diet !== value));
+        // Eliminar la dieta deseleccionada del array de dietTypes en recipeData
+        updatedValue = recipeData.dietTypes.filter((item) => item !== diet);
       }
     }
-  //
   
-  console.log(recipeData);
+    setRecipeData({
+      ...recipeData,
+      [name]: updatedValue
+    });
   
+    const updatedErrors = validation(
+      {
+        ...recipeData,
+        [name]: updatedValue
+      },
+      existingRecipes
+    );
+    setErrors(updatedErrors);
+  };
+
+  const handleSubmit = async(event) => {
+      event.preventDefault();
+      const formErrors = validation(recipeData, existingRecipes);
+
+      if(Object.keys(formErrors).length === 0){
+        try {
+          const response = await axios.post(URL, recipeData);
+          const newRecipe = response.data;
+          dispatch(addRecipes(newRecipe, recipeData)); // Agregar la nueva receta al estado de Redux
+          console.log(newRecipe);
+          console.log(recipeData);
+          alert("Recipe created successfully");
+          navigate("/home");
+        } catch (error) {
+          console.log(error)
+          alert("Error creating recipe");
+        }
+      } else {
+        setErrors(formErrors);
+      }
+  }
+
+  // console.log(recipeData);
+
   return (
     <div className="form">
       <form onSubmit={handleSubmit}>
 
         <label htmlFor="image">Image: </label>
-        <input type="text" placeholder="image URL" name="image" value={recipeData.image} onChange={handleChange}/> <br />
+        <input type="text" placeholder="image URL" name="image" value={recipeData.image} onChange={handleChange}/>
+        {errors.image && <p style={{color:"red"}}>{errors.image}</p>}
+        <br /> <br />
 
         <label htmlFor="name">Name: </label>
-        <input type="text" name="name" value={recipeData.name} onChange={handleChange}/> <br />
+        <input type="text" name="name" value={recipeData.name} onChange={handleChange}/>
+        {errors.name && <p style={{color:"red"}}>{errors.name}</p>}
+        <br /> <br />
 
         <label htmlFor="summary">Summary: </label>
-        <input type="text" name="summary" value={recipeData.summary} onChange={handleChange}/> <br />
+        <input type="text" name="summary" value={recipeData.summary} onChange={handleChange}/> 
+        {errors.summary && <p style={{color:"red"}}>{errors.summary}</p>}
+        <br /> <br />
  
         <label htmlFor="healthScore">Health Score: </label>
-        <input type="number" name="healthScore" value={recipeData.healthScore} onChange={handleChange}/> <br />
+        <input type="number" name="healthScore" value={recipeData.healthScore} onChange={handleChange}/> 
+        {errors.healthScore && <p style={{color:"red"}}>{errors.healthScore}</p>}
+        <br /> <br />
 
         <label htmlFor="steps">Steps: </label>
-        <input type="text" name="steps" value={recipeData.steps} onChange={handleChange}/> <br />
+        <input type="text" name="steps" value={recipeData.steps} onChange={handleChange}/> 
+        {errors.steps && <p style={{color:"red"}}>{errors.steps}</p>}
+        <br /> <br />
 
-        {/* <label htmlFor="dietTypes">Diet Type: </label>
-        <select name="dietTypes" multiple value={recipeData.dietTypes} onChange={handleChange}>
-        <option value="" disabled defaultValue>Seleccionar</option>
-          {diets.map((diet, index) => (
-            <option key={index} value={diet}>{diet}</option>
-          ))}
-        </select> */}
-
-        <label htmlFor="dietTypes">Diet Types: </label>  {/*CHECKEAR ESTO, SINO BORRAR*/}
+        <label htmlFor="dietTypes">Diet Types: </label> 
         {diets.map((diet, index) => (
           <div key={index}>
-            <input type="checkbox" name="dietTypes" value={diet} onChange={handleDietChange} /> 
-            <span>{diet}</span>
+            <input type="checkbox" name="dietTypes" value={diet} onChange={handleChange} /> 
+            <span className="formSpan">{diet}</span>
           </div>
         ))}
-
-        <button>CREATE RECIPE</button>
+        {errors.dietTypes && <p style={{color:"red"}}>{errors.dietTypes}</p>}
+        <br /> 
+        <div className="button-container">
+          <button type="submit">CREATE RECIPE</button>
+        </div>
       </form>
     </div>
   )

@@ -1,0 +1,83 @@
+.container{
+    overflow-y: auto;
+    display: flex; /* Agrega flexbox */
+    flex-wrap: wrap; /* Permite que los elementos se envuelvan en filas */
+    
+}
+.detailImage{
+    border: 5px solid black;
+    margin-top: 30px;
+    margin-left: 15px;
+    border-radius: 15px;
+    width: fit-content;
+    display: flex;
+}
+.detailName{
+    margin-top: 100px;
+    border: 5px solid black;
+    border-radius: 15px;
+    width: fit-content;
+    margin-left: 15px;
+    background-color: #fcbf49;
+    color: black;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    flex-direction: column; /* Asegura que los elementos estén uno debajo del otro */
+}
+.detailDish{
+    border: 5px solid black;
+    border-radius: 15px;
+    width: 550px;
+    margin-left: 15px;
+    background-color: #220901;
+    color: white;
+    overflow: hidden;
+}
+.detailDiet{
+    border: 5px solid black;
+    border-radius: 15px;
+    width: 550px;
+    margin-left: 15px;
+    background-color: #220901;
+    color: white;
+}
+.detailScore{
+    border: 5px solid black;
+    border-radius: 15px;
+    width: 550px;
+    margin-left: 15px;
+    background-color: #220901;
+    color: white;
+}
+.detailSummary{
+    border: 5px solid black;
+    border-radius: 15px;
+    width: 600px;
+    margin-left: 15px;
+    background-color: #220901;
+    color: white;
+    flex: 1; /* Permite que el elemento ocupe el espacio disponible */
+    height: fit-content;
+    margin-top: 100px;
+}
+.detailSteps{
+    border: 5px solid black;
+    border-radius: 15px;
+    width: 600px;
+    margin-left: 15px;
+    background-color: #220901;
+    color: white;
+    flex: 1; /* Permite que el elemento ocupe el espacio disponible */
+    height: fit-content;
+    margin-top: 100px;
+    margin-right: 30px;
+}
+.backToRecipes{
+    background-color: #ffe6a7;
+    border-radius: 15px;
+    font-size: medium;
+    font-weight: bolder;
+    margin-top: 100px;
+    margin-right: 30px;
+    align-self: center;
+    height: fit-content;
+}

@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { Card } from './Card'
-import { connect, useDispatch } from 'react-redux';
-import { filterRecipe, alphabeticalOrderRecipe, scoreOrderRecipe } from '../redux/actions';
+import { connect, useDispatch, useSelector } from 'react-redux';
+import { filterRecipe, alphabeticalOrderRecipe, scoreOrderRecipe, refreshRecipes, filterSourceRecipe } from '../redux/actions';
 import "../css/Cards.css";
 
 const Cards = (props) => {
-  const recipes = props.recipes; //traigo las recetas de APP
-  
+  const recipes = useSelector((state) => state.allRecipes);
+
+  console.log("Datos de la receta creada:", recipes);
   //defino recetas por pagina y estados de la pagina y currentPage
   const RECIPES_PER_PAGE = 9;
   const [currentPage, setCurrentPage] = useState(0);
@@ -37,23 +38,74 @@ const Cards = (props) => {
 
   const dispatch = useDispatch();
 
+  const handleRefresh = () => {
+    if (recipes.length > 0) {
+      dispatch(refreshRecipes());
+    }
+    setCurrentPage(0);
+  };
+
   const handlerAlphabeticalOrder = (event) => {
     dispatch(alphabeticalOrderRecipe(event.target.value))
     setAux(true);
+    console.log(event.target.value);
   }
 
   const handlerScoreOrder = (event) => {
     dispatch(scoreOrderRecipe(event.target.value))
     setAux(true);
+    console.log(event.target.value);
   }
 
   const handlerFilter = (event) => {
+    event.preventDefault()
     dispatch(filterRecipe(event.target.value));
+    console.log(event.target.value);
+  }
+
+  const handlerSourceFilter = (event) => {
+    event.preventDefault()
+    dispatch(filterSourceRecipe(event.target.value))
+    setCurrentPage(0)
   }
   console.log(recipesToShow);
 
   return (
     <div className='scroll'>
+      <div className='ordersYfilters'>
+        <button onClick={handleRefresh}>Refresh</button>
+        <label className='filters'>Order:</label>
+        <select className='select' name="alphabetical" onChange={handlerAlphabeticalOrder}>
+          <option disabled defaultValue>Alphabetical</option>
+          <option value="A">Ascend</option>
+          <option value="D">Descend</option>
+        </select>
+        <select className='select' name="numerical" onChange={handlerScoreOrder}>
+          <option disabled defaultValue>Health Score</option>
+          <option value="A">Ascend</option>
+          <option value="D">Descend</option>
+        </select>
+
+        <label className='filters'>Diet Types:</label>
+        <select className='select' name="diets" onChange={handlerFilter}>
+          <option disabled defaultValue>Select...</option>
+          <option value="gluten free">Gluten Free</option>
+          <option value="dairy free">Dairy Free</option>
+          <option value="lacto ovo vegetarian">Lacto-Ovo-Vegetarian</option>  
+          <option value="vegan">Vegan</option>
+          <option value="primal">Primal</option>
+          <option value="paleolithic">Paleolithic</option>
+          <option value="whole 30">Whole 30</option>
+        </select>
+
+        <label className='filters'>Sources:</label>
+        <select className='select' name="diets" onChange={handlerSourceFilter}>
+          <option disabled defaultValue>Select...</option>
+          <option value="all">All Recipes</option>
+          <option value="default">Recipes Brought</option>
+          <option value="created">Created Recipes</option>  
+        </select>
+      </div>
       <div className='centro'> 
         <div className='pos'> 
           <button onClick={prevHandler} className='botones'>Prev</button>
@@ -63,6 +115,7 @@ const Cards = (props) => {
           <button onClick={nextHandler} className='botones'>Next</button>
         </div>
       </div>
+      
       {
         recipesToShow.map(recipe => (
           <Card
@@ -70,9 +123,8 @@ const Cards = (props) => {
             id={recipe.id}
             name={recipe.name}
             dishTypes={recipe.dishTypes}
-            dietTypes={recipe.dietTypes}          
+            dietTypes={recipe.dietTypes }          
             summary={recipe.summary}       
-            score={recipe.score}
             healthScore={recipe.healthScore}
             steps={recipe.steps}
             image={recipe.image}
@@ -80,40 +132,14 @@ const Cards = (props) => {
           />
         ))
       }
-      <label className='filters'>Order:</label>
-      <select className='select' name="alphabetical" onChange={handlerAlphabeticalOrder}>
-        <option disabled selected>Alphabetical</option>
-        <option value="A">Ascend</option>
-        <option value="D">Descend</option>
-      </select>
-      <select className='select' name="numerical" onChange={handlerScoreOrder}>
-        <option disabled selected>Health Score</option>
-        <option value="A">Ascend</option>
-        <option value="D">Descend</option>
-      </select>
-
-      <label className='filters'>Diet Types:</label>
-      <select className='select' name="diets" onChange={handlerFilter}>
-       <option disabled selected>Select...</option>
-       <option value="gluten free">Gluten Free</option>
-       <option value="vegetarian">Vegetarian</option>
-       <option value="lacto vegetarian">Lacto-Vegetarian</option>
-       <option value="ovo vegetarian">Ovo-Vegetarian</option>
-       <option value="lacto ovo vegetarian">Lacto-Ovo-Vegetarian</option>  {/*checkear si estan todas las dietTypes*/}
-       <option value="vegan">Vegan</option>
-       <option value="paleolithic">Paleo</option>
-       <option value="primal">Primal</option>
-       <option value="dairy free">Dairy Free</option>
-       <option value="low fodmap">Low FODMAP</option>
-       <option value="whole 30">Whole 30</option>
-      </select>
     </div>
   )
 }
 
 const mapStateToProps = (state) => {
   return{
-    allRecipes: state.allRecipes
+    allRecipes: state.allRecipes,
+    recipes: state.recipes
   }
 }
 

@@ -2,12 +2,14 @@
     margin-top: 50px;
     margin-left: 15px;
     margin-right: 15px;
+    margin-bottom: 30px;
     display: inline-block;
     position: relative;
     border: 5px solid black;
     border-radius: 20px;
     background-color: #8b5e34;
     width: 22vw;
+    height: 400px;
 }
 .imagen{
     border-radius: 30px;
@@ -21,9 +23,18 @@
     font-weight: bold;
     margin-top: 0px;
     margin-bottom: 5px;
+    margin-left: 2.5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
 }
 .name{
     text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
 }
 .closeButton{
     background-color: red;
@@ -43,4 +54,7 @@
 .link:focus,
 .link:hover {
     color: white; 
+}
+.card h2 {
+    font-size: 1.2em;
 }

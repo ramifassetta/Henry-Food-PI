@@ -5,6 +5,7 @@
     width: 100%;
     background-color: #0d1821;
     border-bottom: 0.5px solid #6c757d;
+    z-index: 1;
 }
 .nav-container button {
     border: none; /* Quita el borde */

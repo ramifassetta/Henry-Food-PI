@@ -5,41 +5,37 @@ import { Nav } from './components/Nav';
 import Cards from './components/Cards';
 import { Detail } from "./components/Detail";
 import { Form } from "./components/Form";
-import { useState } from 'react';
 import axios from "axios";
+import { useDispatch } from 'react-redux';
+import { closeRecipe, addRecipes } from './redux/actions';
 
 const URL = `http://localhost:3001/recipes`;
 
 function App() {
-  //location para la nav
+  const dispatch = useDispatch();
+
   const location = useLocation();
   const showNav = location.pathname !== '/';
 
-  //state donde almaceno las recetas
-  const [recipes, setRecipes] = useState([]);
-
   //Funciones Buscar y Cerrar
-  const onSearch = async(id) => {
+  const onSearch = async (id) => {
     try {
       const response = await axios.get(`${URL}/${id}`);
-      const data = response.data; 
+      const data = response.data;
   
-      if(data.name){
-        setRecipes((oldRecipes)=> [...oldRecipes, data]);
+      if (data && data.name) {
+        dispatch(addRecipes(data, data));
+      } else {
+        alert(`Recipe not found with ID: ${id}`);
       }
-      
     } catch (error) {
-      alert(`Cant found a Recipe with ID: ${id}`);
+      alert(error.message);
     }
-  }
+  };
 
-  const onClose = (id) => {
-    const recipeFiltered = recipes.filter(recipe => recipe.id !== id);
-    setRecipes(recipeFiltered);
-    console.log(id);
+  const onClose = (name) => {
+    dispatch(closeRecipe(name));
   }
-
- 
 
   return (
     
@@ -48,8 +44,8 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Landing />}/>
-        <Route path="/home" element={<Cards recipes={recipes} onClose={onClose}/>}/>
-        <Route path="/detail/:id" element={<Detail />}/>
+        <Route path="/home" element={<Cards  onClose={onClose}/>}/>
+        <Route path="/detail/:name" element={<Detail />}/>
         <Route path="/create" element={<Form />}/>
       </Routes>
     </div>
